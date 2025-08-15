@@ -7,13 +7,13 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "3.12.3"
-chainlit = "^1.1.402"
-neo4j = "^5.23.1"
+chainlit = "^2.6.9"
+neo4j = "^5.28.2"
 langchain-community = "^0.3.0"
-langchain-openai = "^0.2.0"
+langchain-openai = "^0.3.30"
 langchain-core = "^0.3.15"
-python-dotenv = "^1.0.1"
-langchain-tavily = "^0.1.0"
+python-dotenv = "^1.1.1"
+langchain-tavily = "^0.2.11"
 
 [build-system]
 requires = ["poetry-core"]

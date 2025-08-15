@@ -1,4 +1,6 @@
 import ast
+import tempfile
+import os
 
 from io import BytesIO
 
@@ -10,7 +12,6 @@ from tools import tools, search_tool, download_document_tool
 from prompts import SYSTEM_PROMPT
 from openai import AsyncOpenAI
 import chainlit as cl
-from chainlit.element import Element
 
 client = AsyncOpenAI()
 MAX_ITER = 3
@@ -71,30 +72,41 @@ async def call_tool(tool_call_id, name, arguments, message_history):
             
             # Handle the document tool response by creating a downloadable file
             if "Requirements document generated successfully!" in function_response:
-                # Extract the document content from the response
-                # The response format is: "Requirements document generated successfully! Document content:\n\n{content}"
-                content_start = function_response.find("Document content:\n\n") + len("Document content:\n\n")
-                document_content = function_response[content_start:]
-                
-                # Create a file element for download
-                file_element = cl.File(
-                    name="requirements_document.md",
-                    content=document_content.encode(),
-                    mime="text/markdown",
-                    description="Software Requirements Document"
-                )
-                
-                # Send the message with the file attachment
-                await cl.Message(
-                    content="Requirements document generated successfully! You can download it using the file attachment below.",
-                    elements=[file_element]
-                ).send()
-                
-                # Mark that we've generated a document this turn
-                cl.user_session.set("document_generated_this_turn", True)
-                
-                # Update the function response to just indicate success
-                function_response = "Requirements document generated successfully! The document contains a comprehensive analysis of your requirements based on our conversation."
+                try:
+                    # Extract the document content from the response
+                    # The response format is: "Requirements document generated successfully! Document content:\n\n{content}"
+                    content_start = function_response.find("Document content:\n\n") + len("Document content:\n\n")
+                    document_content = function_response[content_start:]
+                    
+                    print(f"DEBUG: Document content length: {len(document_content)} characters")
+                    print(f"DEBUG: Document content preview: {document_content[:100]}...")
+                    
+                    # Create a file element for download
+                    file_element = cl.File(
+                        name="requirements_document.md",
+                        content=document_content.encode('utf-8'),
+                        display="inline"
+                    )
+                    
+                    print("DEBUG: File element created successfully")
+                    
+                    # Send the message with the file attachment
+                    await cl.Message(
+                        content="Requirements document generated successfully! You can download it using the file attachment below.",
+                        elements=[file_element]
+                    ).send()
+                    
+                    print("DEBUG: Message sent successfully with file attachment")
+                    
+                    # Mark that we've generated a document this turn
+                    cl.user_session.set("document_generated_this_turn", True)
+                    
+                    # Update the function response to just indicate success
+                    function_response = "Requirements document generated successfully! The document contains a comprehensive analysis of your requirements based on our conversation."
+                    
+                except Exception as e:
+                    print(f"ERROR: Failed to create or send file: {e}")
+                    function_response = f"Document generation succeeded but file creation failed: {str(e)}"
 
     current_step.output = function_response
     current_step.language = "json"
@@ -178,7 +190,7 @@ async def on_message(message: cl.Message):
         cur_iter += 1
 
 @cl.on_audio_chunk
-async def on_audio_chunk(chunk: cl.AudioChunk):
+async def on_audio_chunk(chunk: cl.InputAudioChunk):
     if chunk.isStart:
         buffer = BytesIO()
         # This is required for whisper to recognize the file type
@@ -192,7 +204,7 @@ async def on_audio_chunk(chunk: cl.AudioChunk):
 
 
 @cl.on_audio_end
-async def on_audio_end(elements: list[Element]):
+async def on_audio_end():
     # Get the audio buffer from the session
     audio_buffer: BytesIO = cl.user_session.get("audio_buffer")
     audio_buffer.seek(0)  # Move the file pointer to the beginning
