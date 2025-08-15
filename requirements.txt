@@ -169,7 +169,6 @@ typing_extensions==4.12.2
 uptrace==1.26.0
 urllib3==2.2.2
 uvicorn==0.35.0
--e git+ssh://git@github.com/muddassir-lateef/Virtual-Requirements-Buddy.git@25532eda33cb66df5af18a60d83ee193c43b6062#egg=virtual_requirements_buddy
 watchfiles==0.20.0
 wrapt==1.16.0
 wsproto==1.2.0

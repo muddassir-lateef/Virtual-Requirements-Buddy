@@ -1,8 +1,4 @@
 import ast
-import tempfile
-import os
-
-from io import BytesIO
 
 from dotenv import load_dotenv
 from typing import Dict, Optional
@@ -163,14 +159,6 @@ async def call_gpt4(message_history):
 
     return tool_call_id
 
-@cl.step(type="tool")
-async def speech_to_text(audio_file):
-    response = await client.audio.translations.create(
-        model="whisper-1", file=audio_file
-    )
-
-    return response.text
-
 @cl.on_message
 async def on_message(message: cl.Message):
 
@@ -178,58 +166,6 @@ async def on_message(message: cl.Message):
     message_history.append({"role": "user", "content": message.content})
     
     # Reset the document generation flag for new user messages
-    cl.user_session.set("document_generated_this_turn", False)
-
-    cur_iter = 0
-
-    while cur_iter < MAX_ITER:
-        tool_call_id = await call_gpt4(message_history)
-        if not tool_call_id:
-            break
-
-        cur_iter += 1
-
-@cl.on_audio_chunk
-async def on_audio_chunk(chunk: cl.InputAudioChunk):
-    if chunk.isStart:
-        buffer = BytesIO()
-        # This is required for whisper to recognize the file type
-        buffer.name = f"input_audio.{chunk.mimeType.split('/')[1]}"
-        # Initialize the session for a new audio stream
-        cl.user_session.set("audio_buffer", buffer)
-        cl.user_session.set("audio_mime_type", chunk.mimeType)
-
-    # Write the chunks to a buffer and transcribe the whole audio at the end
-    cl.user_session.get("audio_buffer").write(chunk.data)
-
-
-@cl.on_audio_end
-async def on_audio_end():
-    # Get the audio buffer from the session
-    audio_buffer: BytesIO = cl.user_session.get("audio_buffer")
-    audio_buffer.seek(0)  # Move the file pointer to the beginning
-    audio_file = audio_buffer.read()
-    audio_mime_type: str = cl.user_session.get("audio_mime_type")
-
-    input_audio_el = cl.Audio(
-        mime=audio_mime_type, content=audio_file, name=audio_buffer.name
-    )
-    # await cl.Message(
-    #     author="You",
-    #     type="user_message",
-    #     content="",
-    #         elements=[input_audio_el, *elements],
-    # ).send()
-
-    whisper_input = (audio_buffer.name, audio_file, audio_mime_type)
-    transcription = await speech_to_text(whisper_input)
-
-    msg = cl.Message(author="User", content=transcription)
-    await msg.send()
-    message_history = cl.user_session.get("message_history")
-    message_history.append({"role": "user", "content": transcription})
-    
-    # Reset the document generation flag for new audio messages
     cl.user_session.set("document_generated_this_turn", False)
 
     cur_iter = 0

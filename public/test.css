@@ -33,6 +33,42 @@ header img {
     max-width: none !important;
 }
 
+/* Hide audio input and file upload elements */
+.cl-input-file,
+.cl-input-audio,
+.cl-audio-input,
+.cl-file-input,
+[data-testid="audio-input"],
+[data-testid="file-input"],
+.audio-input,
+.file-input {
+    display: none !important;
+}
+
+/* Hide audio recording button */
+.cl-audio-record,
+.cl-audio-button,
+[data-testid="audio-record"],
+.audio-record-button {
+    display: none !important;
+}
+
+/* Hide file upload area */
+.cl-file-upload,
+.cl-upload-area,
+[data-testid="file-upload"],
+.file-upload-area {
+    display: none !important;
+}
+
+/* Hide microphone icon */
+.cl-microphone,
+.cl-mic,
+[data-testid="microphone"],
+.microphone-icon {
+    display: none !important;
+}
+
 /* Blue theme enhancements */
 .cl-message {
     border-left: 4px solid #2196F3 !important;
