@@ -1,0 +1,8 @@
+# Ignore the .env file
+.env
+
+# You can also ignore other files or directories that you don't want in the Docker image
+.git
+.gitignore
+*.pyc
+__pycache__/

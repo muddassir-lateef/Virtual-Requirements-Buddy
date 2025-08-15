@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "virtual-requirements-buddy"
+version = "0.1.0"
+description = "Virtual Requirements Buddy (VRB) - AI assistant for requirements engineering"
+authors = ["Muddassir Lateef <lateef.muddassir@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.12.3"
+chainlit = "^1.1.402"
+neo4j = "^5.23.1"
+langchain-community = "^0.3.0"
+langchain-openai = "^0.2.0"
+langchain-core = "^0.3.15"
+python-dotenv = "^1.0.1"
+langchain-tavily = "^0.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

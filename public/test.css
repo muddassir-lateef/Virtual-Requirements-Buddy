@@ -1,0 +1,81 @@
+.watermark {
+    display: none !important;
+}
+
+/* Make the logo larger */
+.logo {
+    width: 200px !important;
+    height: auto !important;
+    max-width: none !important;
+}
+
+/* Target the header logo specifically */
+header .logo,
+.header .logo,
+.MuiAppBar-root .logo {
+    width: 250px !important;
+    height: auto !important;
+    max-width: none !important;
+}
+
+/* Make any image with logo in the class name larger */
+img[class*="logo"] {
+    width: 200px !important;
+    height: auto !important;
+    max-width: none !important;
+}
+
+/* Target the main logo in the header */
+.MuiAppBar-root img,
+header img {
+    width: 250px !important;
+    height: auto !important;
+    max-width: none !important;
+}
+
+/* Blue theme enhancements */
+.cl-message {
+    border-left: 4px solid #2196F3 !important;
+}
+
+.cl-message:hover {
+    border-left-color: #1976D2 !important;
+}
+
+/* Blue accent for buttons and interactive elements */
+.cl-button,
+.cl-button-primary {
+    background-color: #2196F3 !important;
+    border-color: #2196F3 !important;
+}
+
+.cl-button:hover,
+.cl-button-primary:hover {
+    background-color: #1976D2 !important;
+    border-color: #1976D2 !important;
+}
+
+/* Blue theme for file attachments */
+.cl-file {
+    border-color: #64B5F6 !important;
+}
+
+.cl-file:hover {
+    border-color: #2196F3 !important;
+    background-color: #E3F2FD !important;
+}
+
+/* Blue accent for input fields */
+.cl-input:focus {
+    border-color: #2196F3 !important;
+    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2) !important;
+}
+
+/* Blue theme for links */
+a {
+    color: #2196F3 !important;
+}
+
+a:hover {
+    color: #1976D2 !important;
+}
