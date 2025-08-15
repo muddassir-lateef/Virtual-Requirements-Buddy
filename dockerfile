@@ -27,6 +27,8 @@ FROM python:3.12.3-slim as runtime
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
+ENV CHAINLIT_HOST=0.0.0.0
+ENV CHAINLIT_PORT=8080
 
 # Set the working directory
 WORKDIR /app
@@ -42,4 +44,4 @@ COPY . /app/
 EXPOSE 8080
 
 # Run the application
-CMD ["python", "-m", "chainlit", "run", "app.py", "-h", "--port", "8080"]
+CMD ["python", "-m", "chainlit", "run", "app.py", "--host", "0.0.0.0", "--port", "8080"]

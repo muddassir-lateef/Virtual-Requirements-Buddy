@@ -164,7 +164,7 @@ async def on_message(message: cl.Message):
 
     message_history = cl.user_session.get("message_history")
     message_history.append({"role": "user", "content": message.content})
-    
+
     # Reset the document generation flag for new user messages
     cl.user_session.set("document_generated_this_turn", False)
 
